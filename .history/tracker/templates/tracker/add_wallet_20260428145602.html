@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Wallet</title>
+  </head>
+  <body>
+    <h1>My Wallets</h1>
+    <a href="/logout/">Logout</a>
+
+    {% if wallets %}
+      {% for wallet in wallets %}
+        <p>{{ wallet.name }} = {{ wallet.balance }}</p>
+      {% endfor %}
+      {% else %}
+        <p>No wallets yet.</p>
+      {% endif %}
+
+      <a href="/wallet/add/">Add Wallet</a>
+  </body>
+</html>

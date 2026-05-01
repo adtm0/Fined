@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ wallet.name }}</title>
+  </head>
+  <body>
+    <h1>{{ wallet.name }} - {{ wallet.balance }}</h1>
+    <a href="/dashboard/">Back to Dashboard</a>
+    <a href="/wallet/{{ wallet.id }}/add-transaction/">Add Transaction</a>
+
+    <h2>Transactions</h2>
+    {% if transactions %}
+      {% for t in transactions %}
+        <p>{{ t.date }} - {{ t.type }} - {{ t.amount}} - {{ t.description }}</p>
+        <a href="/transaction/{{}}"></a>
+      {% endfor %}
+    {% else %}
+      <p>No transactions yet.</p>
+    {% endif %}
+  </body>
+</html>

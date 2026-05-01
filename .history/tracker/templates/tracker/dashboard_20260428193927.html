@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>My Wallets</h1>
+    <h2>Total Balance: {{ total_balance}}</h2>
+
+    <a href="/logout/">Logout</a>
+
+    {% if wallets %}
+      {% for wallet in wallets %}
+        <p><a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a> - {{ wallet.balance }}</p>
+        <a href="/wallet/{{ wallet.id }}/add-transaction/">Add Transaction</a>
+        <a href="/wallet/{{ wallet.id }}/edit/">Edit</a>
+        <a href="/wallet/{{ wallet.id }}/delete/">Delete</a>
+      {% endfor %}
+    {% else %}
+      <p>No wallets yet.</p>
+    {% endif %}
+    
+    <a href="/wallet/add/">Add Wallet</a>
+      
+      <h2>Recent Transactions</h2>
+      {% if recent_transactions %}
+        {% for t in recent_transactions %}
+          <p>{{ t.date }} - {{ t.wallet.name}} - {{ t.type }} - {{ t.amount }} - {{ t.description }}</p>
+        {% endfor %}
+      {% else %}
+        <p>No transactions yet.</p>
+      {% endif %}
+
+    <h2>Last 7 Days</h2>
+    <canvas id="chart" width="400" height="200">Canvas</canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
+</html>

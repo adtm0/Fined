@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Transaction</title>
+  </head>
+  <body>
+    <h1>Edit Transaction</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p style="color:red;">{{ form.errors }}</p>
+      {% endif %}
+      {% form.as_p %}
+      <button></button>
+    </form>
+  </body>
+</html>

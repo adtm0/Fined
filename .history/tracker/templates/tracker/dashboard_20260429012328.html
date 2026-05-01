@@ -1,0 +1,140 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="left-panel-hero">
+        <p class="section-label">Financial Overview</p>
+        <h1 class="greeting">Good evening, <br><em>{{ request.user.username }}.</em></h1>
+        <p class="subtext">Here's a summary of your income, spending, and savings across all wallets.</p>
+      </div>
+      
+      <div class="stat-block">
+        <div class="stat">
+          <h2>&#8369;{{ total_income }}</h2>
+          <p>Total income</p>
+        </div>
+        <div class="stat">
+          <h2>&#8369;{{ total_spending }}</h2>
+          <p>Total Spending</p>
+        </div>
+        <div class="stat">
+          <h2>{{ savings_rate }}%</h2>
+          <p>Savings Rate</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Panel -->
+    <div class="middle-panel">
+      <div class="analytics-box">
+        <div class="analytics-header">
+          <span class="analytics-title">Analytics</span>
+        </div>
+        <canvas id="chart"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          const ctx = document.getElementById('chart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: {{ chart_labels|safe }},
+              datasets: [
+                { 
+                  label: 'Income', 
+                  data: {{ chart_income|safe }}, 
+                  backgroundColor: '#2a4858',
+                  borderRadius: 0,
+                  borderSkipped: false,
+                  barPercentage: 0.5
+                },
+                { 
+                  label: 'Expenses', 
+                  data: {{ chart_expense|safe }}, 
+                  backgroundColor: '#c85c3a',
+                  borderRadius: 0,
+                  borderSkipped: false,
+                  barPercentage: 0.5
+                }
+              ]
+            },
+            options: { 
+              plugins: { 
+                legend: { 
+                  position: 'top',
+                  labels: {
+                    font: { family: 'DM Mono', size: 9 },
+                    color: #5a5751,
+                    boxWidth: 8,
+                    boxHeight: 8,
+                    padding: 16
+                  } 
+                } 
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  border: { display: false },
+                  ticks: { font: { family: 'DM Mono', size: 9 }, color: '#5a5751' }
+                },
+                y: {
+                  grid: { color: 'rgba(226,224,219,0.6)' },
+                  border: { display: false },
+                  ticks: { font: { family: 'DM Mono', size: 9 }, color: '#5a5751' }
+                }
+              }
+             }
+          });
+        </script>
+      </div>
+      
+      <div class="wallets-box">
+        <div class="wallets-header">
+                <p class="section-label">Wallets</p>
+                <a href="/wallet/add/" class="add-link">+ ADD</a>
+            </div>
+            {% if wallets %}
+                {% for wallet in wallets %}
+                <div class="wallet-item">
+                    <a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a>
+                    <span>₱{{ wallet.balance }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <a href="/wallet/add/" class="empty-link">+ ADD YOUR FIRST WALLET →</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+        <div class="total-balance-box">
+            <p class="section-label">TOTAL BALANCE</p>
+            <h1>₱{{ total_balance }}</h1>
+            <p class="subtext">All wallets combined</p>
+        </div>
+
+        <div class="actions-box">
+            <p class="section-label">ACTIONS</p>
+            <a href="/wallet/add/" class="action-btn active">ADD WALLET →</a>
+            {% if wallets %}
+                <a href="/wallet/{{ wallets.0.id }}/add-transaction/" class="action-btn">ADD TRANSACTION →</a>
+            {% endif %}
+        </div>
+
+        <div class="recent-box">
+            <p class="section-label">RECENT</p>
+            {% if recent_transactions %}
+                {% for t in recent_transactions %}
+                <p class="recent-item">{{ t.date }} — {{ t.wallet.name }} — ₱{{ t.amount }}</p>
+                {% endfor %}
+            {% else %}
+                <p class="subtext">NO TRANSACTIONS YET</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

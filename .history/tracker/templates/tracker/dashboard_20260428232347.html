@@ -1,0 +1,135 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="dashboard-grid">
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <p class="section-label">Financial Overview</p>
+    <h1 class="greeting">Good evening, <br><em>{{ request.user.username }}</em></h1>
+    <p class="subtext"> Here's a summary of your income, spending, and savings across all wallets.</p>
+
+    <div class="stat-block">
+      <div class="stat">
+        <h2>₱{{ total_income }}</h2>
+        <p>TOTAL INCOME</p>
+      </div>
+      <div class="stat">
+        <h2>₱{{ total_spending }}</h2>
+        <p>TOTAL SPENDING</p>
+      </div>
+      <div class="stat">
+        <h2>₱{{ savings_rate }}</h2>
+        <p>SAVINGS RATE</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle Panel -->
+  <div class="middle-panel">
+    <div class="analytics-box">
+      <p class="section-label">Analytics</p>
+      <canvas id="chart"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        const ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [
+              { label:'Income', data: {{ chart_income|safe }}, backgroundColor: '#4a7c59'},
+              { label:'Expense', data: {{ chart_expense|safe }}, backgroundColor: '#c0392b'},
+            ]
+          },
+          options: { plugins: { legend: { position: 'top' } } }
+        });
+      </script>
+    </div>
+
+    <div class="wallets-box">
+      <div class="wallets-header">
+        <p class="section-label">Wallets</p>
+        <a href="/wallet/add/" class="add-link"> + ADD</a>
+      </div>
+      {% if wallets%}
+        {% for wallet in wallets %}
+        <div class="wallet_item">
+          <a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a>
+          <span>₱{{ wallet.balance }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <a href="/wallet/add/" class="empty-link">+ ADD YOUR FIRST WALLET →</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="total-balance-box">
+      <p class="section-label">TOTAL BALANCE</p>
+      <h1>{{ total_balance }}</h1>
+      <p class="subtext">ALL wallets combined</p>
+    </div>
+
+    <div class="actions-box">
+      <p class="section-label">ACTIONS</p>
+      <a href="/wallet/add/" class="action-btn active">ADD WALLET </a>
+    </div>
+  </div>
+</div>
+<h1 class="mb-3">My Wallets</h1>
+<h4 class="mb-4">Total Balance: {{ total_balance}}</h4>
+
+{% if wallets %}
+  {% for wallet in wallets %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title"><a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</h5>
+      <p class="card-text">Balance: {{ wallet.balance }}</p>
+      <a href="/wallet/{{ wallet.id }}/add-transaction/" class="btn btn-sm btn-primary">Add Transaction</a>
+      <a href="/wallet/{{ wallet.id }}/edit/" class="btn btn-sm btn-secondary">Edit</a>
+      <a href="/wallet/{{ wallet.id }}/delete/" class="btn btn-sm btn-danger" onclick="return confirm('Delete this wallet and all its transactions?')">Delete</a>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p>No wallets yet.</p>
+{% endif %}
+
+<a href="/wallet/add/" class="btn btn-success mb-4">Add Wallet</a>
+
+<h2 class="mb-3">Recent Transactions</h2>
+{% if recent_transactions %}
+  {% for t in recent_transactions %}
+    <p>{{ t.date }} - {{ t.wallet.name}} - {{ t.type }} - {{ t.amount }} - {{ t.description }}</p>
+  {% endfor %}
+{% else %}
+  <p>No transactions yet.</p>
+{% endif %}
+
+<h2 class="mt-4 mb-3">Last 7 Days</h2>
+<canvas id="chart" width="400" height="200"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [
+        {
+          label:'Income',
+          data: {{ chart_income|safe }},
+          backgroundColor: 'green',
+        },
+        {
+          label: 'Expense',
+          data: {{ chart_expense|safe }},
+          backgroundColor: 'red'
+        }
+      ]
+    }
+  });
+</script>
+{% endblock %}

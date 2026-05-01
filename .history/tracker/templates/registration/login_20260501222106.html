@@ -1,0 +1,31 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-header">
+      <p class="section-label">Welcome back</p>
+      <h1 class="auth-title">Login</h1>
+    </div>
+
+    {% if form.errors %}
+      <p class="auth-error">Invalid username or password.</p>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label>Username</label>
+      <input type="text" name="username" autofocus>
+      <label>Password</label>
+      <input type="password" name="password">
+      <div class="auth-actions">
+        <a href="/register/" class="auth-link">No account? Register →</a>
+        <button type="submit" class="modal-submit">Login</button>
+      </div>
+    </form>
+  </div>
+   <footer class="site-footer">
+    <a href="https://adtm0.github.io/" target="_blank" class="footer-link">&#169; 2026 Finance. by <span class="footer-a">A.</span></a>
+      </footer> 
+</div>
+{% endblock %}

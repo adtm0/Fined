@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f0ede6;
+  font-family: 'Georgia', serif;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  min-height: 100vh;
+  border: 1px solid #d0ccc4;
+}
+
+/* Left Panel */
+.left-panel {
+  padding: 40px 30px;
+  border-right: 1px solid #d0ccc4;
+}
+
+.section-label {
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #c0392b;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.greeting {
+  font-size: 36px;
+  font-weight: normal;
+  line-height: 1.2;
+  margin
+}

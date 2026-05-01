@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Wallet</title>
+  </head>
+  <body>
+    <h1>Edit {{ wallet.name }}</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p style="color:red;">{{ form.errors }}</p>
+      {% endif %}
+      {{ form.as_p }}
+      <button type="submit">Save</button>
+    </form>
+    <a href="/dashboard/">Cancel</a>
+  </body>
+</html>

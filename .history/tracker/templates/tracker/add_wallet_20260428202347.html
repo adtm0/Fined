@@ -1,0 +1,12 @@
+{% extends 'tracker/base.html' %}
+<h1 class="mb-4">Add Wallet</h1>
+<form method="POST" class="w-50">
+  {% csrf_token %}
+  {% if form.errors %}
+    <p style="color:red;">{{ form.errors }}</p>
+  {% endif %}
+  {{ form.as_p }}
+  <button type="submit">Add Wallet</button>
+</form>
+  </body>
+</html>

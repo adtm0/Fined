@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {%if form.errors%}
+        <p style="color:red;">Invalid username or password.</p>
+      {% endif %}
+      {{form.as_p}}
+      <button type="submit">Login</button>
+    </form>
+    <a></a>
+  </body>
+</html>

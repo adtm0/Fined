@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>My Wallets</h1>
+    <h2>Total Balance: {{ total_balance}}</h2>
+
+    <a href="/logout/">Logout</a>
+
+    {% if wallets %}
+      {% for wallet in wallets %}
+        <p><a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a> - {{ wallet.balance }}</p>
+        <a href="/wallet/{{ wallet.id }}/add-transaction/">Add Transaction</a>
+        <a href="/wallet/{{ wallet.id }}/edit/">Edit</a>
+        <a href="/wallet/{{ wallet.id }}/delete/">Delete</a>
+      {% endfor %}
+
+      {% if recent_transactions %}
+      {% else %}
+        <p>No wallets yet.</p>
+      {% endif %}
+
+      <a href="/wallet/add/">Add Wallet</a>
+  </body>
+</html>

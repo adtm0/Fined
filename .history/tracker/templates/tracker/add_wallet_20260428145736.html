@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Wallet</title>
+  </head>
+  <body>
+    <h1>Add Wallet</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p style>{{ wallet.name }} = {{ wallet.balance }}</p>
+      {% endfor %}
+      {% else %}
+        <p>No wallets yet.</p>
+      {% endif %}
+</form>
+      <a href="/wallet/add/">Add Wallet</a>
+  </body>
+</html>

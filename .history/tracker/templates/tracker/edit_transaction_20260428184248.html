@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Transaction</title>
+  </head>
+  <body>
+    <h1>Edit Transaction</h1>
+    <form method="POST">
+      {% csrf_token %}
+
+
+    
+    {% if transactions %}
+      {% for t in transactions %}
+        <p>{{ t.date }} - {{ t.type }} - {{ t.amount}} - {{ t.description }}</p>
+      {% endfor %}
+    {% else %}
+      <p>No trnsactions yet.</p>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,249 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <div class="left-panel-hero">
+      <p class="section-label">Financial Overview</p>
+      <h1 class="greeting">Good evening,<br><em>{{ request.user.username }}.</em></h1>
+      <p class="subtext">Here's a summary of your income, spending, and savings across all wallets.</p>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat">
+        <h2>&#8369;{{ total_income }}</h2>
+        <p>Total income</p>
+      </div>
+      <div class="stat">
+        <h2>&#8369;{{ total_spending }}</h2>
+        <p>Total spending</p>
+      </div>
+      <div class="stat">
+        <h2>{{ savings_rate }}%</h2>
+        <p>Savings rate</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle Panel -->
+  <div class="middle-panel">
+    <div class="analytics-box">
+      <div class="analytics-header">
+        <button class="slide-btn" onclick="prevSlide()">‹</button>
+        <span class="analytics-title" id="analytics-title">Analytics</span>
+        <button class="slide-btn" onclick="nextSlide()">›</button>
+      </div>
+
+      <div id="slide-chart">      
+        <canvas id="chart"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          const ctx = document.getElementById('chart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: {{ chart_labels|safe }},
+              datasets: [
+                {
+                  label: 'Income',
+                  data: {{ chart_income|safe }},
+                  backgroundColor: '#2a4858',
+                  borderRadius: 0,
+                  borderSkipped: false,
+                  barPercentage: 0.5
+                },
+                {
+                  label: 'Expenses',
+                  data: {{ chart_expense|safe }},
+                  backgroundColor: '#c85c3a',
+                  borderRadius: 0,
+                  borderSkipped: false,
+                  barPercentage: 0.5
+                }
+              ]
+            },
+            options: {
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: {
+                    font: { family: 'DM Mono', size: 9 },
+                    color: '#5a5751',
+                    boxWidth: 8,
+                    boxHeight: 8,
+                    padding: 16
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  border: { display: false },
+                  ticks: { font: { family: 'DM Mono', size: 9 }, color: '#5a5751' }
+                },
+                y: {
+                  grid: { color: 'rgba(226,224,219,0.6)' },
+                  border: { display: false },
+                  ticks: { font: { family: 'DM Mono', size: 9 }, color: '#5a5751' }
+                }
+              }
+            }
+          });
+        </script>
+      </div>
+
+      <div id="slide-calendar" style="display:none">
+
+        <div class="cal-month-nav">
+          <a href="?month={{ prev_month }}&year={{ prev_year }}" class="cal-nav-btn">‹</a>
+          <span class="calendar-month-label">{{ calendar_month_name }}</span>
+          <a href="?month={{ next_month }}&year={{ next_year }}" class="cal-nav-btn">›</a>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="cal-header">Sun</div>
+          <div class="cal-header">Mon</div>
+          <div class="cal-header">Tue</div>
+          <div class="cal-header">Wed</div>
+          <div class="cal-header">Thu</div>
+          <div class="cal-header">Fri</div>
+          <div class="cal-header">Sat</div>
+          {% for week in calendar_weeks %}
+            {% for day in week %}
+            <div class="cal-cell {% if day == today_day %}cal-today{% endif %}">
+              {% if day %}
+                <span class="cal-day-num">{{ day }}</span>
+                <div class="cal-dots">
+                  {% if day in income_days%}<span class="cal-dot income"></span>{% endif %}
+                  {% if day in expense_days%}<span class="cal-dot expense"></span>{% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      
+    </div>
+
+  </div>
+
+    <div class="wallets-box">
+      <div class="wallets-header">
+        <span class="wallets-title">Wallets</span>
+        <button class="add-link" onclick="document.getElementById('wallet-modal').style.display='flex'">+ Add</button>
+      </div>
+      {% if wallets %}
+        {% for wallet in wallets %}
+        <div class="wallet-item">
+          <div>
+            <a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a>
+          </div>
+          <span class="wallet-balance">&#8369;{{ wallet.balance }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <a href="/wallet/add/" class="empty-link">+ Add your first wallet →</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="total-balance-box">
+      <p class="balance-eyebrow">Total balance</p>
+      <h1>&#8369;{{ total_balance }}</h1>
+      <p class="balance-sub">All wallets combined</p>
+    </div>
+
+    <div class="actions-box">
+      <p class="actions-label">Actions</p>
+      <a href="/wallet/add/" class="action-btn">Add wallet</a>
+      {% if wallets %}
+        <button class="action-btn" onclick="document.getElementById('transaction-modal').style.display='flex'">Add transaction</button>
+      {% endif %}
+    </div>
+
+    <div class="recent-box">
+      <p class="recent-label">Recent</p>
+      {% if recent_transactions %}
+        {% for t in recent_transactions %}
+        <p class="recent-item">{{ t.date }} — {{ t.wallet.name }} — &#8369;{{ t.amount }}</p>
+        {% endfor %}
+      {% else %}
+        <p class="recent-empty">No transactions yet</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="wallet-modal">
+  <div class="modal">
+    <h2 class="modal-title">Add Wallet</h2>
+    <form method="POST" action="/wallet/add/">
+      {% csrf_token %}
+      <label>Name</label>
+      <input type="text" name="name" autofocus>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel" onclick="document.getElementById('wallet-modal').style.display='none'">Cancel</button>
+        <button type="submit" class="modal-submit">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="transaction-modal">
+  <div class="modal">
+    <h2 class="modal-title">Add Transaction</h2>
+    <form method="POST" action="/transaction/add/">
+      {% csrf_token %}
+      <label>Wallet</label>
+      <select name="wallet">
+        {% for wallet in wallets %}
+        <option value="{{ wallet.id }}">{{ wallet.name }}</option>
+        {% endfor %}
+      </select>
+      <label>Type</label>
+      <select name="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <label>Amount</label>
+      <input type="number" name="amount" step="0.01" min="0" required>
+      <label>Description</label>
+      <input type="text" name="description">
+      <label>Date</label>
+      <input type="date" name="date" required>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel" onclick="document.getElementById('transaction-modal').style.display='none'">Cancel</button>
+        <button type="submit" class="modal-submit">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  let currentSlide = params.has('month')
+  const slides = ['slide-chart', 'slide-calendar'];
+  const titles = ['Analytics', 'Calendar'];
+
+  function showSlide(i) {
+    slides.forEach((id, idx) => {
+      document.getElementById(id).style.display = idx === i ? 'block' : 'none';
+    });
+    document.getElementById('analytics-title').textContent = titles[i];
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+</script>
+{% endblock %}

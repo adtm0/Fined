@@ -1,0 +1,14 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+    <h1>Register</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {%if form.errors%}
+        <p style="color:red;">{{ form.errors }}</p>
+      {% endif %}
+      {{form.as_p}}
+      <button type="submit">Create Account</button>
+    </form>
+    <a href="/login">Already have an account? Login in</a>
+  \

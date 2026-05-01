@@ -1,0 +1,1 @@
+web: gunicorn fined.wsgi --log-file -

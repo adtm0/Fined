@@ -1,0 +1,32 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<h1>Transaction History</h1>
+
+{% if transasctions %}
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Wallet</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <body>
+      {% for t in transactions %}
+      <tr>
+        <td>{{ t.date }}</td>
+        <td>{{ t.wallet.name }}</td>
+        <td>{{ t.type }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.description }}</td>
+      </tr>
+      {% endfor %}
+    </body>
+  </table>
+{% else %}
+  <p>No transactions yet.</p>
+  {%endif%}
+{% endblock %}

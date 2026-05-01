@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fined</title>
+    <link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar">
+      <a class="nav-brand" href="/dashboard/">Finance.</a>
+      
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted-dark);letter-spacing:0.05em;">by </span>
+        <a href="https://adtm0.github.io/" target="_blank" style="font-family:var(--serif);font-size:18px;color:var(--accent2);text-decoration:none;">A.</a>
+      </div>
+      
+    </nav>
+    <div class="page-content">
+      {% block content%}{% endblock %}
+    </div>
+  </body>
+</html>

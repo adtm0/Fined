@@ -1,0 +1,35 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="history-page">
+  <h1 class="history-title">Transaction History</h1>
+
+  {% if transactions %}
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Amount</th>
+          <th>Account</th>
+          <th>Type</th>
+          <th>Date</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td>{{ t.amount }}</td>
+          <td>{{ t.account.name }}</td>
+          <td><span class="type-badge {{ t.type }}">{{ t.type }}</span></td>
+          
+          <td>{{ t.description }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="subtext">No transactions yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

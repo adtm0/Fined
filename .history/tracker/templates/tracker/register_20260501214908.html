@@ -1,0 +1,37 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-header">
+      <p class="section-label">Create account</p>
+      <h1 class="auth-title">Register</h1>
+    </div>
+    
+    {%if form.errors%}
+      <p class="auth-error">Please fix the errors below.</p>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label>Username</label>
+      <input type="text" name="username" autofocus>
+
+      <label>Password</label>
+      <input type="password" name="password1"></input>
+      
+      <label>Confirm password</label>
+      <input type="password" name="password2"></input>
+
+      <p class="auth-hint">At least 8 characters. Can't be entirely numeric.</p>
+
+    </form>     
+
+  </div>
+</div>
+<h1 class="mb-4">Register</h1>
+  
+  <button type="submit" class="btn btn-primary">Create Account</button>
+</form>
+<a href="/login" class="mt-3 d-block">Already have an account? Login in</a>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'tracker/base.html' %}
+{% block content %}
+<h1 class="mb-2">{{ wallet.name }}</h1>
+<h4 class="mb-4">Balance: {{ wallet.balance }}</h4>
+
+<a href="/wallet/{{ wallet.id }}/add-transaction/" class="btn btn-primary mb-4">Add Transaction</a>
+<a href="/dashboard/" class="btn btn-secondary mb-4">Back to Dashboard</a>
+
+<h2 class="mb-3">Transactions</h2>
+{% if transactions %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Descriptiom</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td>{{ t.date }}</td>
+        <td>{{ t.type }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.description }}</td>
+        <td>{{ t.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+    <a href="/transaction/{{ t.id }}/edit/">Edit</a>
+    <a href="/transaction/{{ t.id }}/delete/">Delete</a>
+  {% endfor %}
+{% else %}
+  <p>No transactions yet.</p>
+{% endif %}
+  </body>
+</html>

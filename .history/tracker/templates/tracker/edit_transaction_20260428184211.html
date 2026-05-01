@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Transaction</title>
+  </head>
+  <body>
+    <h1>Edit Transaction</h1>
+    <a href="/dashboard/">Back to Dashboard</a>
+    <a href="/wallet/{{ wallet.id }}/add-transaction/">Add Transaction</a>
+
+    <h2>Transactions</h2>
+    {% if transactions %}
+      {% for t in transactions %}
+        <p>{{ t.date }} - {{ t.type }} - {{ t.amount}} - {{ t.description }}</p>
+      {% endfor %}
+    {% else %}
+      <p>No trnsactions yet.</p>
+    {% endif %}
+  </body>
+</html>

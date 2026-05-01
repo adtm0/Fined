@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Wallet</title>
+  </head>
+  <body>
+    <h1>Add Wallet</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p style="color:red;">{{ form.errors }}</p>
+      {% endif %}
+      {{ form.as_p }}
+      <button type=></button>
+</form>
+      <a href="/wallet/add/">Add Wallet</a>
+  </body>
+</html>

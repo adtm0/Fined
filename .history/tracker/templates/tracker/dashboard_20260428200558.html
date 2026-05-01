@@ -1,0 +1,57 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<h1 class="mb-3">My Wallets</h1>
+<h4 class="mb-4">Total Balance: {{ total_balance}}</h4>
+
+<a href="/logout/">Logout</a>
+
+{% if wallets %}
+  {% for wallet in wallets %}
+  <><>
+  <p><a href="/wallet/{{ wallet.id }}/">{{ wallet.name }}</a> - {{ wallet.balance }}</p>
+  <a href="/wallet/{{ wallet.id }}/add-transaction/">Add Transaction</a>
+  <a href="/wallet/{{ wallet.id }}/edit/">Edit</a>
+  <a href="/wallet/{{ wallet.id }}/delete/">Delete</a>
+{% endfor %}
+{% else %}
+<p>No wallets yet.</p>
+{% endif %}
+
+<a href="/wallet/add/">Add Wallet</a>
+
+<h2>Recent Transactions</h2>
+{% if recent_transactions %}
+  {% for t in recent_transactions %}
+    <p>{{ t.date }} - {{ t.wallet.name}} - {{ t.type }} - {{ t.amount }} - {{ t.description }}</p>
+  {% endfor %}
+{% else %}
+  <p>No transactions yet.</p>
+{% endif %}
+
+<h2>Last 7 Days</h2>
+<canvas id="chart" width="400" height="200">Canvas</canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: {{ chart_labels|safe }},
+    datasets: [
+      {
+        label:'Income',
+        data: {{ chart_income|safe }},
+        backgroundColor: 'green',
+      },
+      {
+        label: 'Expense',
+        data: {{ chart_expense|safe }},
+        backgroundColor: 'red'
+      }
+    ]
+  }
+});
+    </script>
+  </body>
+</html>
