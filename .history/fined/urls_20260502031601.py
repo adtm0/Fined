@@ -21,7 +21,7 @@ from django.views.generic import RedirectView
 from tracker import views
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/login/'), name='home'),
+    path('', RedirectView.as_view())
     path('admin/', admin.site.urls),
     path('register/', views.register, name='register'),
     path('login/', LoginView.as_view(redirect_authenticated_user=True), name='login'),
